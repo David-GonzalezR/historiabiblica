@@ -32,11 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------------------------
     // 2. ESTADO GLOBAL DE LA APLICACIÓN
     // ----------------------------------------------------------------------
+    // Paywall: capítulos 0 y 1 (cap. 1 y 2) son gratuitos; a partir del índice 2 se requiere acceso.
+    const FREE_CHAPTERS_COUNT = 2;
+    // URL de pago — reemplaza con tu link real de Nequi / PayPal / etc.
+    const DONATE_BASE_URL = 'https://link.mercadopago.com.co/lahistoria'; // ← cambia por tu link real
+
     let chaptersData = [];
     let actsData = {};
     let currentChapterIndex = -1;
     let highestUnlockedIndex = 0;
     let isStoryCompleted = false;
+    let hasPremiumAccess = false; // se carga desde localStorage
     let readerFontSize = 18;
     let readerTheme = 'dark'; // 'light' | 'sepia' | 'dark'
 
@@ -89,6 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmResetBtn = document.getElementById('confirm-reset-btn');
     const completionRestartBtn = document.getElementById('completion-restart-btn');
 
+    // Paywall
+    const paywallBackdrop = document.getElementById('paywall-backdrop');
+    const paywallDonateBtn = document.getElementById('paywall-donate-btn');
+    const paywallVerifyBtn = document.getElementById('paywall-verify-btn');
+    const paywallCloseBtn = document.getElementById('paywall-close-btn');
+    const amountBtns = document.querySelectorAll('.amount-btn');
+
     // ----------------------------------------------------------------------
     // 3. CARGA DE PROGRESO Y AJUSTES DESDE LOCALSTORAGE
     // ----------------------------------------------------------------------
@@ -105,6 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (savedComp === 'true') {
                 isStoryCompleted = true;
             }
+            // Cargar acceso premium
+            hasPremiumAccess = localStorage.getItem('laHistoriaPremium') === 'true';
         } catch (e) {
             console.warn('Error leyendo localStorage:', e);
         }
@@ -529,6 +544,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openChapter(chapterId) {
+        // Verificar si el capítulo requiere acceso premium
+        const chapter = chaptersData.find(c => c.id === chapterId);
+        if (chapter && chapter.globalIndex >= FREE_CHAPTERS_COUNT && !hasPremiumAccess) {
+            showPaywall();
+            return;
+        }
         location.hash = `#/capitulo/${encodeURIComponent(chapterId)}`;
     }
 
@@ -777,5 +798,64 @@ document.addEventListener('DOMContentLoaded', () => {
     // Recalcular posiciones SVG al redimensionar ventana
     window.addEventListener('resize', () => {
         requestAnimationFrame(() => updateSvgCurvedPath());
+    });
+
+    // ----------------------------------------------------------------------
+    // 12. LÓGICA DEL PAYWALL / MURO DE APORTE
+    // ----------------------------------------------------------------------
+    let selectedAmount = 10000;
+
+    function showPaywall() {
+        paywallBackdrop.classList.remove('hidden');
+        paywallBackdrop.setAttribute('aria-hidden', 'false');
+        updateDonateLinkAmount();
+    }
+
+    function hidePaywall() {
+        paywallBackdrop.classList.add('hidden');
+        paywallBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    function updateDonateLinkAmount() {
+        // Actualiza el href del botón de donación con el monto seleccionado
+        paywallDonateBtn.href = `${DONATE_BASE_URL}?amount=${selectedAmount}`;
+    }
+
+    function unlockPremiumAccess() {
+        hasPremiumAccess = true;
+        try {
+            localStorage.setItem('laHistoriaPremium', 'true');
+        } catch (e) {}
+        hidePaywall();
+        showToast('✨ ¡Acceso desbloqueado! Gracias por tu aporte.');
+    }
+
+    // Selección de monto
+    amountBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            amountBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedAmount = parseInt(btn.dataset.amount, 10);
+            updateDonateLinkAmount();
+        });
+    });
+
+    // Botón "Ya hice mi aporte" → desbloquear de inmediato (sistema de honor)
+    paywallVerifyBtn.addEventListener('click', () => {
+        unlockPremiumAccess();
+    });
+
+    // Cerrar paywall → volver al mapa
+    paywallCloseBtn.addEventListener('click', () => {
+        hidePaywall();
+        location.hash = '#/mapa';
+    });
+
+    // Cerrar haciendo clic fuera del modal
+    paywallBackdrop.addEventListener('click', (e) => {
+        if (e.target === paywallBackdrop) {
+            hidePaywall();
+            location.hash = '#/mapa';
+        }
     });
 });

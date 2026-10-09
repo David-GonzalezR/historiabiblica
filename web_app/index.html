@@ -215,6 +215,76 @@
         </div>
     </div>
 
+    <!-- ==================== PAYWALL / DONATION MODAL ==================== -->
+    <div id="paywall-backdrop" class="modal-backdrop hidden" aria-hidden="true">
+        <div class="paywall-modal" role="dialog" aria-modal="true" aria-labelledby="paywall-title">
+            <!-- Decorative top glow -->
+            <div class="paywall-glow-top"></div>
+
+            <!-- Lock Icon -->
+            <div class="paywall-lock-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+
+            <h2 id="paywall-title" class="paywall-title">Continúa el Camino</h2>
+            <p class="paywall-subtitle">
+                Has leído los dos primeros capítulos de manera gratuita.<br>
+                Para continuar leyendo <strong>La Historia</strong>, realiza un aporte voluntario.
+            </p>
+
+            <!-- Benefits list -->
+            <ul class="paywall-benefits">
+                <li>
+                    <span class="benefit-icon">✦</span>
+                    <span>Acceso completo a los <strong>52 capítulos</strong> de la narrativa</span>
+                </li>
+                <li>
+                    <span class="benefit-icon">✦</span>
+                    <span>Apoya la investigación y escritura continua</span>
+                </li>
+                <li>
+                    <span class="benefit-icon">✦</span>
+                    <span>Desbloqueo <strong>permanente</strong> en este dispositivo</span>
+                </li>
+            </ul>
+
+            <!-- Contribution amount buttons -->
+            <div class="paywall-amounts">
+                <button class="amount-btn" data-amount="5000">$5.000</button>
+                <button class="amount-btn active" data-amount="10000">$10.000</button>
+                <button class="amount-btn" data-amount="20000">$20.000</button>
+            </div>
+            <p class="paywall-amount-note">Puedes elegir el monto que prefieras (COP)</p>
+
+            <!-- CTA Buttons -->
+            <div class="paywall-actions">
+                <a id="paywall-donate-btn" href="#" target="_blank" rel="noopener noreferrer" class="paywall-cta-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.2" fill="none">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span>Hacer mi aporte</span>
+                </a>
+                <button id="paywall-verify-btn" class="paywall-verify-btn">
+                    Ya realicé mi aporte — Desbloquear
+                </button>
+            </div>
+
+            <!-- Small print -->
+            <p class="paywall-fine-print">
+                Tras realizar el aporte, presiona «Desbloquear» para continuar.<br>
+                El acceso se guardará en este navegador.
+            </p>
+
+            <!-- Close button (go back) -->
+            <button id="paywall-close-btn" class="paywall-dismiss-btn" aria-label="Volver al mapa">
+                ← Volver al mapa
+            </button>
+        </div>
+    </div>
+
     <!-- ==================== TOAST CONTAINER ==================== -->
     <div id="toast-container" class="toast-container" aria-live="assertive"></div>
 
