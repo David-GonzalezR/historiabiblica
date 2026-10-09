@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0B1020">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="La Historia: El camino de la redención. De la creación a la nueva creación en una narrativa continua.">
+    <title>La Historia: El Camino</title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400;1,7..72,600&display=swap" rel="stylesheet">
+
+    <!-- CDN Exact Versions -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app-root" class="app-root">
+        <!-- ==================== TIMELINE VIEW ==================== -->
+        <div id="timeline-view" class="view-container">
+            <!-- STICKY MAIN HEADER -->
+            <header class="main-header" id="main-header">
+                <div class="header-top-row">
+                    <div class="brand-block">
+                        <h1 class="logo-title">LA HISTORIA</h1>
+                        <p class="logo-subtitle">El Camino de la Redención</p>
+                    </div>
+                    <button id="reset-progress-btn" class="header-icon-btn" aria-label="Reiniciar progreso" title="Reiniciar progreso">
+                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20a8 8 0 1 0-8-8"/>
+                            <path d="M4 12H1v-5"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="global-progress-block">
+                    <div class="progress-bar-bg">
+                        <div id="global-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span id="progress-text">0 de 52 capítulos</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- STICKY ACT INDICATOR FLOATING BAR -->
+            <div id="sticky-act-bar" class="sticky-act-bar hidden" aria-live="polite">
+                <span id="sticky-act-badge" class="sticky-act-badge">Acto I</span>
+                <span id="sticky-act-title" class="sticky-act-title">El Comienzo de Todo</span>
+            </div>
+
+            <!-- TIMELINE PATH CONTAINER -->
+            <main id="path-container" class="path-container">
+                <!-- Skeletons loading state -->
+                <div id="loading-state" class="loading-state">
+                    <div class="skeleton-header"></div>
+                    <div class="skeleton-nodes">
+                        <div class="skeleton-node"></div>
+                        <div class="skeleton-node"></div>
+                        <div class="skeleton-node"></div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- FLOATING ACTION BUTTON (FAB) FOR CONTINUING -->
+            <button id="fab-continue" class="fab-continue hidden" aria-label="Ir al capítulo actual">
+                <span>Continuar</span>
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <!-- ==================== READER VIEW ==================== -->
+        <div id="chapter-view" class="view-container hidden">
+            <!-- STICKY READER HEADER -->
+            <header class="reader-header" id="reader-header">
+                <button id="back-btn" class="back-button" aria-label="Volver al mapa">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </button>
+                
+                <div class="reader-header-info">
+                    <span id="reader-badge" class="badge">Acto I</span>
+                    <span id="reader-title-short" class="reader-title-short">En el principio</span>
+                </div>
+
+                <button id="reader-settings-btn" class="reader-icon-btn" aria-label="Ajustes de lectura" title="Ajustes de lectura">
+                    <span class="aa-icon">Aa</span>
+                </button>
+
+                <!-- READING PROGRESS BAR LINE -->
+                <div class="reading-progress-line-bg">
+                    <div id="reading-progress-bar" class="reading-progress-line-fill" style="width: 0%;"></div>
+                </div>
+            </header>
+
+            <!-- READER SCROLLABLE CONTENT -->
+            <main class="reader-content" id="reader-content">
+                <!-- HERO BANNER -->
+                <section class="chapter-hero-banner" id="chapter-period-banner">
+                    <div class="hero-act-badge" id="hero-act-badge">Acto I</div>
+                    <p class="hero-period" id="hero-period">Creación (Génesis 1-2)</p>
+                    <h2 class="hero-title" id="hero-title">En el principio: La Creación y el diseño del Edén</h2>
+                    <div class="hero-meta">
+                        <span class="read-time-pill" id="hero-read-time">
+                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            ~4 min de lectura
+                        </span>
+                    </div>
+                </section>
+
+                <!-- ARTICLE BODY -->
+                <article id="chapter-markdown" class="markdown-body"></article>
+
+                <!-- READER FOOTER NAVIGATION -->
+                <footer class="reader-footer">
+                    <button id="prev-btn" class="nav-btn secondary-btn" aria-label="Capítulo anterior">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="15 18 9 12 15 6"/></svg>
+                        <span>Anterior</span>
+                    </button>
+                    <button id="next-btn" class="nav-btn primary-btn" aria-label="Completar capítulo y continuar">
+                        <span id="next-btn-text">Completado · Siguiente</span>
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </footer>
+            </main>
+        </div>
+
+        <!-- ==================== COMPLETION CELEBRATION SCREEN ==================== -->
+        <div id="completion-screen" class="view-container hidden">
+            <div class="completion-content">
+                <div class="completion-crown-icon">
+                    <svg viewBox="0 0 24 24" width="72" height="72" stroke="#F2D48A" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>
+                    </svg>
+                </div>
+                <h2 class="completion-title">¡Has recorrido la Historia!</h2>
+                <p class="completion-subtitle">De la Creación a la Nueva Creación: has presenciado toda la narrativa de la Redención.</p>
+                <div class="completion-card">
+                    <p class="completion-quote">«En el principio era el Verbo... Y el Verbo se hizo carne... Y enjugará Dios toda lágrima de los ojos de ellos.»</p>
+                </div>
+                <button id="completion-restart-btn" class="nav-btn primary-btn finish-btn">
+                    <span>Volver al inicio del mapa</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== READER SETTINGS BOTTOM SHEET ==================== -->
+    <div id="settings-backdrop" class="modal-backdrop hidden" aria-hidden="true">
+        <div class="bottom-sheet" id="settings-bottom-sheet" role="dialog" aria-modal="true" aria-label="Ajustes de lectura">
+            <div class="bottom-sheet-handle"></div>
+            <div class="bottom-sheet-header">
+                <h3>Ajustes de lectura</h3>
+                <button id="close-settings-btn" class="close-icon-btn" aria-label="Cerrar ajustes">&times;</button>
+            </div>
+            <div class="bottom-sheet-body">
+                <!-- FONT SIZE -->
+                <div class="setting-group">
+                    <label class="setting-label">Tamaño de letra</label>
+                    <div class="font-size-controls">
+                        <button id="font-decrease-btn" class="setting-pill-btn" aria-label="Disminuir letra">A-</button>
+                        <span id="font-size-display" class="font-size-indicator">18px</span>
+                        <button id="font-increase-btn" class="setting-pill-btn" aria-label="Aumentar letra">A+</button>
+                    </div>
+                </div>
+
+                <!-- READER THEME -->
+                <div class="setting-group">
+                    <label class="setting-label">Tema de lectura</label>
+                    <div class="theme-selector-grid">
+                        <button class="theme-option-btn theme-light" data-theme="light">
+                            <span class="theme-preview-dot"></span>
+                            <span>Claro</span>
+                        </button>
+                        <button class="theme-option-btn theme-sepia" data-theme="sepia">
+                            <span class="theme-preview-dot"></span>
+                            <span>Sepia</span>
+                        </button>
+                        <button class="theme-option-btn theme-dark" data-theme="dark">
+                            <span class="theme-preview-dot"></span>
+                            <span>Oscuro</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== RESET CONFIRMATION MODAL ==================== -->
+    <div id="reset-backdrop" class="modal-backdrop hidden" aria-hidden="true">
+        <div class="dialog-modal" role="dialog" aria-modal="true" aria-labelledby="reset-dialog-title">
+            <h3 id="reset-dialog-title">¿Reiniciar progreso?</h3>
+            <p>Se borrará tu avance actual y volverás a empezar la historia desde el Acto I.</p>
+            <div class="dialog-actions">
+                <button id="cancel-reset-btn" class="dialog-btn secondary-btn">Cancelar</button>
+                <button id="confirm-reset-btn" class="dialog-btn danger-btn">Sí, reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div id="toast-container" class="toast-container" aria-live="assertive"></div>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+</body>
+</html>

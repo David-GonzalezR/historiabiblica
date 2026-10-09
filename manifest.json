@@ -1,0 +1,18 @@
+{
+  "name": "La Historia: El Camino",
+  "short_name": "La Historia",
+  "description": "Una sola narrativa cronológica de toda la Biblia, de la creación a la nueva creación.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0B1020",
+  "theme_color": "#0B1020",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%230B1020'/><circle cx='256' cy='256' r='180' fill='none' stroke='%23D4A94F' stroke-width='24'/><path d='M256 120v272M160 210l96-90 96 90' fill='none' stroke='%23F2D48A' stroke-width='28' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

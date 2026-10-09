@@ -1,0 +1,1222 @@
+/* ==========================================================================
+   LA HISTORIA: EL CAMINO - ESTILOS PRINCIPALES
+   Concepto Visual: Manuscrito Antiguo Iluminado de Noche
+   Estructura: CSS Vanilla puro, Mobile-First, Responsive Desktop
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. VARIABLES CSS (:root) Y DEFINICIÓN DE TEMAS
+   -------------------------------------------------------------------------- */
+:root {
+    /* Paleta Principal del Mapa (Noche Iluminada) */
+    --bg-dark-deep: #070B16;
+    --bg-dark-surface: #0B1020;
+    --bg-dark-card: #141B34;
+    --bg-dark-border: rgba(212, 169, 79, 0.2);
+
+    /* Textos Principales */
+    --text-primary: #F0F4F8;
+    --text-muted: #94A3B8;
+    --text-dim: #64748B;
+
+    /* Dorado Principal (Manuscrito Iluminado) */
+    --gold-main: #D4A94F;
+    --gold-bright: #F2D48A;
+    --gold-shadow: #8A6A22;
+    --gold-glow: rgba(212, 169, 79, 0.35);
+
+    /* Estados de Nodos */
+    --node-completed-bg: linear-gradient(135deg, #E6C265 0%, #B8860B 100%);
+    --node-completed-shadow: #7A5700;
+    --node-current-bg: linear-gradient(135deg, #FAD980 0%, #D4A94F 100%);
+    --node-current-shadow: #8A6A22;
+    --node-locked-bg: #1A2238;
+    --node-locked-shadow: #0F1626;
+
+    /* Tipografías */
+    --font-display: 'Cinzel', serif;
+    --font-reader: 'Literata', serif;
+    --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Tamaño de Fuente Lector (Modificable por JS) */
+    --reader-font-size: 18px;
+
+    /* safe-area-insets para dispositivos móviles modernos */
+    --sat: env(safe-area-inset-top, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+
+    /* Colores de Acento para los 12 Actos */
+    --act-1-color: #2D6A4F; --act-1-light: #52B788;  /* Creación: Verde Edén */
+    --act-2-color: #C07D2B; --act-2-light: #E09F3E;  /* Patriarcas: Ámbar Tierra */
+    --act-3-color: #D96B27; --act-3-light: #F38D40;  /* Éxodo: Fuego Desierto */
+    --act-4-color: #8A4FFF; --act-4-light: #B288FF;  /* Conquista: Púrpura Real */
+    --act-5-color: #D4AF37; --act-5-light: #F3D062;  /* Reino Unido: Dorado Corona */
+    --act-6-color: #A0522D; --act-6-light: #CD853F;  /* Reino Dividido: Bronce */
+    --act-7-color: #4A5568; --act-7-light: #718096;  /* Exilio: Cautiverio Gris */
+    --act-8-color: #2B6CB0; --act-8-light: #4299E1;  /* Retorno: Azul Restauración */
+    --act-9-color: #C59B27; --act-9-light: #E8BF46;  /* Evangelios: Luz Mesiánica */
+    --act-10-color: #00A896; --act-10-light: #02C39A; /* Hechos: Fuego del Espíritu */
+    --act-11-color: #5C677D; --act-11-light: #7D889E; /* Cartas: Papiro Apostólico */
+    --act-12-color: #9E1B32; --act-12-light: #E63946; /* Apocalipsis: Gloria Carmesí */
+}
+
+/* Temas del Lector */
+.theme-light {
+    --reader-bg: #F6EFDF;
+    --reader-text: #1C1917;
+    --reader-muted: #57534E;
+    --reader-card: #EFE6D2;
+    --reader-border: #D6C9AF;
+}
+
+.theme-sepia {
+    --reader-bg: #EADCC0;
+    --reader-text: #291E15;
+    --reader-muted: #614F40;
+    --reader-card: #DECFA5;
+    --reader-border: #C8B68C;
+}
+
+.theme-dark {
+    --reader-bg: #12141C;
+    --reader-text: #E6E2D6;
+    --reader-muted: #94A3B8;
+    --reader-card: #1A1D2B;
+    --reader-border: #2D3348;
+}
+
+/* --------------------------------------------------------------------------
+   2. REINICIO Y ESTILOS BASE
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-dark-deep);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* Fondo de Escritorio con marco decorativo elegante */
+body {
+    background-image: 
+        radial-gradient(circle at 50% 20%, rgba(212, 169, 79, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 20% 80%, rgba(20, 27, 52, 0.8) 0%, transparent 50%);
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+}
+
+/* App Centrada en Escritorio (Max 480px, Mobile-First) */
+.app-root {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--bg-dark-surface);
+    position: relative;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.75);
+    display: flex;
+    flex-direction: column;
+}
+
+.view-container {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. VISTA DEL MAPA (TIMELINE)
+   -------------------------------------------------------------------------- */
+
+/* Encabezado Principal Sticky */
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background: rgba(11, 16, 32, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--bg-dark-border);
+    padding: calc(12px + var(--sat)) 16px 14px 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.header-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.brand-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-main) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(212, 169, 79, 0.2);
+}
+
+.logo-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.header-icon-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 169, 79, 0.3);
+    color: var(--gold-main);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.header-icon-btn:active {
+    transform: scale(0.92);
+    background: rgba(212, 169, 79, 0.2);
+}
+
+/* Barra de Progreso Global */
+.global-progress-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid rgba(212, 169, 79, 0.15);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-main) 0%, var(--gold-bright) 100%);
+    border-radius: 999px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px var(--gold-glow);
+}
+
+.progress-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* Barra Flotante Sticky de Acto Actual */
+.sticky-act-bar {
+    position: sticky;
+    top: calc(82px + var(--sat));
+    z-index: 80;
+    background: rgba(20, 27, 52, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--gold-glow);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease;
+}
+
+.sticky-act-badge {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--gold-bright);
+    background: rgba(212, 169, 79, 0.15);
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--gold-glow);
+}
+
+.sticky-act-title {
+    color: var(--text-primary);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Contenedor del Camino (Timeline Path) */
+.path-container {
+    flex: 1;
+    position: relative;
+    padding: 24px 16px 100px 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Capa SVG para el Camino Curvo Conectivo */
+.path-svg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.path-svg-line-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 6;
+    stroke-dasharray: 6 6;
+}
+
+.path-svg-line-completed {
+    fill: none;
+    stroke: var(--gold-main);
+    stroke-width: 6;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px var(--gold-glow));
+    transition: stroke-dashoffset 0.8s ease;
+}
+
+/* Portada de Sección de Acto */
+.act-section {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 36px;
+}
+
+.act-header-cover {
+    background: linear-gradient(135deg, rgba(20, 27, 52, 0.95) 0%, rgba(11, 16, 32, 0.98) 100%);
+    border: 1px solid var(--act-accent-color, var(--gold-main));
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.act-header-cover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--act-accent-color, var(--gold-main));
+    box-shadow: 0 0 12px var(--act-accent-color, var(--gold-main));
+}
+
+.act-header-num {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--act-accent-color, var(--gold-bright));
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.act-header-period {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.act-header-date {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 10px;
+}
+
+.act-header-flourish {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--act-accent-color, var(--gold-main));
+    opacity: 0.7;
+}
+
+.act-header-flourish::before,
+.act-header-flourish::after {
+    content: '';
+    height: 1px;
+    width: 40px;
+    background: currentColor;
+}
+
+/* Nodos del Camino */
+.path-nodes-list {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+    gap: 32px;
+    padding: 20px 0;
+}
+
+.path-node-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Botón interactivo de cada Nodo */
+.node-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.node-btn:focus-visible .node-circle {
+    outline: 3px solid var(--gold-bright);
+    outline-offset: 4px;
+}
+
+.node-btn:active {
+    transform: scale(0.92);
+}
+
+.node-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Estado Completo */
+.node-status-completed .node-circle {
+    background: var(--node-completed-bg);
+    box-shadow: 0 6px 0 var(--node-completed-shadow), 0 10px 20px rgba(0, 0, 0, 0.4);
+    color: #1A1712;
+}
+
+/* Estado Actual */
+.node-status-current .node-circle {
+    width: 72px;
+    height: 72px;
+    background: var(--node-current-bg);
+    box-shadow: 0 8px 0 var(--node-current-shadow), 0 0 25px var(--gold-glow);
+    color: #1A1712;
+    animation: pulseHalo 2.2s infinite ease-in-out;
+}
+
+/* Estado Bloqueado */
+.node-status-locked .node-circle {
+    background: var(--node-locked-bg);
+    box-shadow: 0 6px 0 var(--node-locked-shadow);
+    color: #4A5568;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Iconos SVG dentro de los Nodos */
+.node-icon-svg {
+    width: 28px;
+    height: 28px;
+}
+
+.node-status-current .node-icon-svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* Burbuja Flotante "CONTINUAR" en Nodo Actual */
+.node-badge-floating {
+    position: absolute;
+    top: -38px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold-bright);
+    color: #1A1712;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    animation: bounceBadge 2s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.node-badge-floating::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0 5px;
+    border-style: solid;
+    border-color: var(--gold-bright) transparent transparent transparent;
+}
+
+/* Tarjeta del Título de Capítulo (Siempre Visible) */
+.node-title-card {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(20, 27, 52, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(212, 169, 79, 0.25);
+    padding: 8px 12px;
+    border-radius: 12px;
+    width: 140px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    z-index: 4;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Posicionamiento opuesto al desplazamiento sinusoide */
+.node-title-card.pos-left {
+    right: calc(50% + 48px);
+    text-align: right;
+}
+
+.node-title-card.pos-right {
+    left: calc(50% + 48px);
+    text-align: left;
+}
+
+.node-title-num {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.node-title-text {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.node-status-locked .node-title-card {
+    opacity: 0.6;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Botón Flotante FAB (Continuar) */
+.fab-continue {
+    position: fixed;
+    bottom: calc(24px + var(--sab));
+    right: max(20px, calc((100vw - 480px) / 2 + 20px));
+    z-index: 90;
+    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-main) 100%);
+    color: #1A1712;
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 12px 20px;
+    border-radius: 999px;
+    border: none;
+    box-shadow: 0 8px 24px var(--gold-glow), 0 4px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: fadeIn 0.4s ease;
+}
+
+.fab-continue:active {
+    transform: scale(0.92);
+}
+
+/* --------------------------------------------------------------------------
+   4. VISTA DEL LECTOR
+   -------------------------------------------------------------------------- */
+
+/* Encabezado Sticky del Lector */
+.reader-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(18, 20, 28, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--reader-border, rgba(255,255,255,0.1));
+    padding: calc(10px + var(--sat)) 16px 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.theme-light .reader-header {
+    background: rgba(246, 239, 223, 0.92);
+}
+
+.theme-sepia .reader-header {
+    background: rgba(234, 220, 192, 0.92);
+}
+
+.back-button, .reader-icon-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--reader-border, rgba(0,0,0,0.1));
+    color: var(--reader-text, var(--text-primary));
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.back-button:active, .reader-icon-btn:active {
+    transform: scale(0.92);
+}
+
+.aa-icon {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.reader-header-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.reader-header-info .badge {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gold-main);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reader-title-short {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--reader-text, var(--text-primary));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+/* Linea Fina de Progreso de Lectura */
+.reading-progress-line-bg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.reading-progress-line-fill {
+    height: 100%;
+    background: var(--gold-main);
+    transition: width 0.1s linear;
+}
+
+/* Contenido del Lector Scrollable */
+.reader-content {
+    flex: 1;
+    background-color: var(--reader-bg);
+    color: var(--reader-text);
+    padding: 0 20px calc(40px + var(--sab)) 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hero Banner del Capítulo */
+.chapter-hero-banner {
+    background: linear-gradient(135deg, var(--act-accent-color, var(--bg-dark-card)) 0%, rgba(0,0,0,0.85) 100%);
+    color: #FFFFFF;
+    margin: 16px -20px 32px -20px;
+    padding: 32px 24px;
+    border-bottom: 3px solid var(--gold-main);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.hero-act-badge {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gold-bright);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--gold-glow);
+}
+
+.hero-period {
+    font-size: 0.88rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 4px;
+    color: #FFFFFF;
+}
+
+.hero-meta {
+    margin-top: 8px;
+}
+
+.read-time-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 10px;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+}
+
+/* Estilos para el Markdown Renderizado */
+.markdown-body {
+    font-family: var(--font-reader);
+    font-size: var(--reader-font-size);
+    line-height: 1.75;
+    word-wrap: break-word;
+    text-wrap: pretty;
+    hyphens: auto;
+    max-width: 65ch;
+    margin: 0 auto;
+}
+
+/* Capitular (Drop Cap) en el primer párrafo del capítulo */
+.markdown-body > p:first-of-type::first-letter {
+    font-family: var(--font-display);
+    font-size: 3.4em;
+    float: left;
+    line-height: 0.8;
+    padding-top: 4px;
+    padding-right: 10px;
+    padding-bottom: 2px;
+    color: var(--gold-main);
+    font-weight: 800;
+}
+
+.markdown-body p {
+    margin-bottom: 1.4em;
+}
+
+.markdown-body h1, 
+.markdown-body h2, 
+.markdown-body h3, 
+.markdown-body h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    color: var(--reader-text);
+}
+
+.markdown-body h1 { font-size: 1.6em; border-bottom: 1px solid var(--reader-border); padding-bottom: 6px; }
+.markdown-body h2 { font-size: 1.35em; color: var(--gold-main); }
+.markdown-body h3 { font-size: 1.15em; }
+
+/* Citas Bíblicas (Blockquotes) */
+.markdown-body blockquote {
+    margin: 1.6em 0;
+    padding: 16px 20px;
+    background: var(--reader-card);
+    border-left: 4px solid var(--gold-main);
+    border-radius: 0 12px 12px 0;
+    font-style: italic;
+    color: var(--reader-text);
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.markdown-body blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.markdown-body ul, .markdown-body ol {
+    margin: 1.2em 0 1.4em 1.5em;
+}
+
+.markdown-body li {
+    margin-bottom: 0.5em;
+}
+
+.markdown-body hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-main), transparent);
+    margin: 2.5em 0;
+}
+
+.markdown-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 1.5em 0;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* Footer de Navegación del Lector */
+.reader-footer {
+    display: flex;
+    gap: 12px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--reader-border);
+}
+
+.nav-btn {
+    flex: 1;
+    min-height: 52px;
+    border-radius: 16px;
+    font-family: var(--font-ui);
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:active {
+    transform: scale(0.96);
+}
+
+.secondary-btn {
+    background: var(--reader-card);
+    color: var(--reader-text);
+    border: 1px solid var(--reader-border);
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-main) 100%);
+    color: #1A1712;
+    box-shadow: 0 6px 18px var(--gold-glow);
+}
+
+/* --------------------------------------------------------------------------
+   5. PANTALLA DE CELEBRACIÓN FINAL
+   -------------------------------------------------------------------------- */
+.completion-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    gap: 20px;
+}
+
+.completion-crown-icon {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: rgba(212, 169, 79, 0.15);
+    border: 2px solid var(--gold-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 40px var(--gold-glow);
+    animation: pulseHalo 2s infinite ease-in-out;
+}
+
+.completion-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--gold-bright);
+}
+
+.completion-subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 340px;
+    line-height: 1.6;
+}
+
+.completion-card {
+    background: rgba(20, 27, 52, 0.8);
+    border: 1px solid var(--gold-glow);
+    padding: 20px;
+    border-radius: 16px;
+    font-style: italic;
+    font-family: var(--font-reader);
+    color: var(--text-primary);
+    max-width: 360px;
+}
+
+.finish-btn {
+    margin-top: 12px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* --------------------------------------------------------------------------
+   6. MODALES Y BOTTOM SHEET DE AJUSTES
+   -------------------------------------------------------------------------- */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 200;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    animation: fadeIn 0.25s ease;
+}
+
+.bottom-sheet {
+    width: 100%;
+    max-width: 480px;
+    background: var(--bg-dark-surface);
+    border-radius: 24px 24px 0 0;
+    border-top: 1px solid var(--gold-glow);
+    padding: 20px 24px calc(24px + var(--sab)) 24px;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
+    animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.bottom-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    margin: 0 auto 16px auto;
+}
+
+.bottom-sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.bottom-sheet-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--gold-bright);
+}
+
+.close-icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.setting-group {
+    margin-bottom: 20px;
+}
+
+.setting-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.font-size-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.setting-pill-btn {
+    background: rgba(212, 169, 79, 0.15);
+    border: 1px solid var(--gold-glow);
+    color: var(--gold-bright);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.font-size-indicator {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.theme-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.theme-option-btn {
+    padding: 12px 8px;
+    border-radius: 14px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.theme-option-btn.active {
+    border-color: var(--gold-bright);
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.theme-preview-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.2);
+}
+
+/* Modal Diálogo de Reinicio */
+.dialog-modal {
+    width: 90%;
+    max-width: 360px;
+    background: var(--bg-dark-card);
+    border: 1px solid var(--gold-glow);
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    margin: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.dialog-modal h3 {
+    font-family: var(--font-display);
+    color: var(--gold-bright);
+    margin-bottom: 10px;
+}
+
+.dialog-modal p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.dialog-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.dialog-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+.danger-btn {
+    background: #E63946;
+    color: #FFFFFF;
+}
+
+/* Toast Notification */
+.toast-container {
+    position: fixed;
+    bottom: calc(30px + var(--sab));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 250;
+    pointer-events: none;
+}
+
+.toast-message {
+    background: rgba(20, 27, 52, 0.95);
+    border: 1px solid var(--gold-glow);
+    color: var(--text-primary);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+}
+
+/* Loading Skeletons */
+.loading-state {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.skeleton-header {
+    height: 100px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-nodes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.skeleton-node {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    animation: shimmer 1.5s infinite linear;
+}
+
+/* --------------------------------------------------------------------------
+   7. ANIMACIONES Y ACCESIBILIDAD
+   -------------------------------------------------------------------------- */
+@keyframes pulseHalo {
+    0%, 100% { box-shadow: 0 8px 0 var(--node-current-shadow), 0 0 15px var(--gold-glow); }
+    50% { box-shadow: 0 8px 0 var(--node-current-shadow), 0 0 30px rgba(242, 212, 138, 0.7); }
+}
+
+@keyframes bounceBadge {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -5px); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(10px); }
+}
+
+@keyframes shimmer {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.3; }
+}
+
+/* Adaptación para Preferencia de Movimiento Reducido */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
