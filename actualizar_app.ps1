@@ -17,7 +17,11 @@ Get-ChildItem ".\historia\*.md" | Sort-Object Name | ForEach-Object {
     }
 };
 $json = $chapters | ConvertTo-Json -Depth 5
-$path = Join-Path (Get-Location) "web_app\data.json"
-[System.IO.File]::WriteAllText($path, $json, [System.Text.Encoding]::UTF8)
+$path1 = Join-Path (Get-Location) "data.json"
+[System.IO.File]::WriteAllText($path1, $json, [System.Text.Encoding]::UTF8)
+if (Test-Path ".\web_app") {
+    $path2 = Join-Path (Get-Location) "web_app\data.json"
+    [System.IO.File]::WriteAllText($path2, $json, [System.Text.Encoding]::UTF8)
+}
 Write-Host "¡data.json actualizado con exito! Refresca tu navegador para ver los cambios." -ForegroundColor Green
 Start-Sleep -Seconds 3
